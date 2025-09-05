@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 
 function AuthHeader({ rightLabel, rightHref }: { rightLabel?: string; rightHref?: string }){
   return (
-    <div className="flex items-center justify-between py-5 px-6 border-b bg-white">
-      <div className="text-sm font-semibold">Spotted.</div>
+    <div className="flex items-center justify-between py-5 px-0 border-b border-[#E5E5E5] mx-8 bg-white">
+      <div className="text-2xl font-bold">Spotted.</div>
       <div>
-        {rightLabel ? <a href={rightHref|| '#'} className="px-3 py-1 text-sm rounded-full border">{rightLabel}</a> : null}
+        {rightLabel ? <a href={rightHref|| '#'} className="px-5 py-2 text-sm rounded-full border">{rightLabel}</a> : null}
       </div>
     </div>
   )
@@ -19,11 +19,17 @@ export default function PasswordUpdated(){
     <div className="min-h-screen flex flex-col bg-[#FAFBFB]">
       <AuthHeader rightLabel="Need Help?" />
       <div className="flex-1 flex items-center justify-center p-6">
-        <div className="card-surface max-w-md w-full text-center">
-          <div className="mb-6 text-4xl">✅</div>
-          <h1 className="text-2xl font-bold mb-4">Password Updated</h1>
-          <p className="text-sm text-[var(--gray)] mb-6">Your password has been updated successfully.</p>
-          <button onClick={()=>router.push('/auth/login')} className="btn-primary-pill">Back to login</button>
+        <div className="card-surface max-w-2xl w-full text-center">
+          <h1 className="text-4xl font-bold mb-3">Password Updated</h1>
+          <p className="text-md text-gray-400 mb-10">Your password has been reset successfully.</p>
+          <div className="mb-10 flex items-center justify-center">
+            <img src="/images/password-updated-icon.svg" alt="password updated" className="w-60 h-52 object-contain" />
+          </div>
+         
+          <div className="px-6">
+            <button onClick={()=>router.push('/auth/login')} className="w-full btn-primary-pill py-3">Back to Login</button>
+          </div>
+          <div className="h-6" />
         </div>
       </div>
     </div>

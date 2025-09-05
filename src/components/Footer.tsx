@@ -1,7 +1,7 @@
 import React from "react";
 
 const Footer = () => (
-  <footer className="w-full bg-white mt-10 px-0 py-8">
+  <footer className="w-full bg-white mt-10 px-0 py-8 pb-5">
     <div className="max-w-6xl mx-auto px-6">
       <div className="flex flex-col md:flex-row justify-between gap-10 pb-6">
         {/* Left: Logo and description */}
@@ -30,9 +30,17 @@ const Footer = () => (
           </div>
         </div>
       </div>
-      <hr className="border-gray-200 mb-4" />
-      <div className="text-center text-gray-400 text-xs">
-        &copy; {new Date().getFullYear()} Copyright. All Right Reserved
+
+      {/* Bottom small divider and compact row like screenshot */}
+      <div className="border-t border-[#E5E5E5] pt-4">
+        <div className="flex items-center justify-between text-xs text-gray-400">
+          <div>&copy; {new Date().getFullYear()} Copyright, All Right Reserved</div>
+          <div className="flex gap-4">
+            <a href="#" className="hover:underline">Term & Conditions</a>
+            <a href="#" className="hover:underline">Privacy Policy</a>
+            <a href="#" className="hover:underline">About Us</a>
+          </div>
+        </div>
       </div>
     </div>
   </footer>

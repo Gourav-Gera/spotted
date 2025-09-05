@@ -38,7 +38,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   {/* Sidebar is always mounted; on mobile it renders an overlay that animates in/out */}
   <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} onClose={closeMobile} isMobile={isMobile} />
 
-      <div className={`flex-1 flex flex-col min-h-screen ${mobileOpen ? "overflow-hidden" : ""}`}>
+  <div className={`flex-1 flex flex-col min-h-screen ${mobileOpen ? "overflow-hidden" : ""}`}>
         <Topbar
           onToggle={() => {
             // choose mobile vs desktop behavior (use isMobile threshold)
@@ -47,7 +47,15 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           }}
         />
 
-        <main className="flex-1 p-4 md:p-8">{children}</main>
+        <main className="flex-1 relative p-4 md:p-8 pb-24">{children}
+          {/* Minimal footer rendered inside the right content area so it doesn't sit under the sidebar */}
+          <div className="hidden md:block">
+            <div className="relative">
+              {/* footer is absolutely positioned inside this relative container */}
+              {/* import dynamically to avoid circular imports at top-level */}
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );

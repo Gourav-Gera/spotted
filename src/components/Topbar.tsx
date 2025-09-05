@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { BiSearch } from 'react-icons/bi';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { useAuth } from '../hooks/useAuth';
-
+import Image from 'next/image';
 type Props = { onToggle?: () => void };
 
 export default function Topbar({ onToggle }: Props) {
@@ -38,13 +38,13 @@ export default function Topbar({ onToggle }: Props) {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <button className="bg-gray-100 rounded-full p-2">
-          <IoNotificationsOutline className="text-gray-500" />
+        <button className="cursor-pointer">
+          <Image src="/images/alarm-icon.svg" alt="hotel" width={40} height={40} className="w-10 h-10 rounded-md object-cover" />
         </button>
         <div className="relative" ref={ref}>
-          <button onClick={() => setOpen(v => !v)} className="flex items-center gap-3 bg-[var(--gray)] rounded-full px-3 py-1 text-white">
+          <button onClick={() => setOpen(v => !v)} className="flex items-center gap-3 bg-[#4A5D52] cursor-pointer rounded-full px-3 pl-5 py-0 pr-0 text-white">
             <div className="text-sm font-semibold">{user ? `Hello, ${user.name}` : 'Hello'}</div>
-            <img src={user ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}` : 'https://randomuser.me/api/portraits/men/32.jpg'} alt="User" className="w-8 h-8 rounded-full border-2 border-white" />
+            <img src={user ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}` : 'https://randomuser.me/api/portraits/men/32.jpg'} alt="User" className="w-10 h-10 rounded-full border-2 border-white" />
           </button>
           {open && (
             <div className="absolute right-0 mt-2 w-44 bg-white shadow-md rounded-md py-1 z-40">

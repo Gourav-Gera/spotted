@@ -4,14 +4,14 @@ import Footer from "../components/Footer";
 
 export default function Home() {
   return (
-    <div className="bg-[#fff] min-h-screen flex flex-col items-center pb-10">
+    <div className="bg-[#fff] min-h-screen flex flex-col items-center pb-0">
       <Header />
       {/* Hero Section */}
       <section className="w-full px-3">
         <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 bg-white rounded-2xl shadow-sm overflow-hidden">
           {/* Left: Text Content */}
           <div className="bg-[#f7f5ef] p-10 flex flex-col justify-center gap-6 border-r border-[#e5e5e5]">
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2">
+            <h1 className="text-3xl md:text-4xl font-semibold leading-tight mb-2">
               Enhance visibility,<br />
               tourism & cultural<br />
               attraction in Italy.
@@ -142,7 +142,15 @@ export default function Home() {
               <div className="text-md text-[var(--gray)] mb-6">billed monthly</div>
               <ul className="w-full text-sm mb-8 space-y-3">
                 <li className="flex items-center gap-2">
-                   <span className="font-semibold">Digital Infopoint </span>  <span className="ml-auto text-lg font-bold text-green-600 ">✓</span> 
+                   <span className="font-semibold">Digital Infopoint </span>  
+                    <Image
+                      src="/images/check-icon-green.svg"
+                      alt="Home"
+                      width={10}
+                      height={10}
+                      className="w-6 h-6 ml-auto"
+                      priority
+                    />
                 </li>
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">AI Chatbot</span> <span className="ml-auto text-sm text-[#060608]"> Limited</span>
@@ -157,7 +165,15 @@ export default function Home() {
                    <span className="font-semibold">E-commerce</span> <span className="ml-auto text-sm text-[#060608]">1-2 Products</span>
                 </li>
                 <li className="flex items-center gap-2">
-                 <span className="font-semibold">Crowdfunding</span> <span className="ml-auto text-red-500 font-bold text-lg">✗</span> 
+                 <span className="font-semibold">Crowdfunding</span> 
+                   <Image
+                      src="/images/cross-icon-red.svg"
+                      alt="Home"
+                      width={10}
+                      height={10}
+                      className="w-4 h-4 ml-auto"
+                      priority
+                    />
                 </li>
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">User Access</span> <span className="ml-auto text-sm text-[#060608]">1 Admin</span>
@@ -166,7 +182,15 @@ export default function Home() {
                    <span className="font-semibold">Translation</span> <span className="ml-auto text-sm text-[#060608]">Italian Only</span>
                 </li>
                 <li className="flex items-center gap-2">
-                   <span className="font-semibold">Newsletter</span> <span className="ml-auto text-red-500 font-bold text-lg">✗</span>
+                   <span className="font-semibold">Newsletter</span> 
+                     <Image
+                      src="/images/cross-icon-red.svg"
+                      alt="Home"
+                      width={10}
+                      height={10}
+                      className="w-4 h-4 ml-auto"
+                      priority
+                    />
                 </li>
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">Pages</span> <span className="ml-auto text-sm text-[#060608]">Up to 5</span>
@@ -185,9 +209,25 @@ export default function Home() {
               <ul className="w-full text-sm mb-8 space-y-3">
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">Digital Infopoint</span>
+                    <Image
+                      src="/images/check-icon-green.svg"
+                      alt="Home"
+                      width={10}
+                      height={10}
+                      className="w-4 h-4 ml-auto"
+                      priority
+                    />
                 </li>
                 <li className="flex items-center gap-2">
-                 <span className="font-semibold">AI Chatbot</span> <span className="ml-auto text-sm text-[#060608]">Unlimited</span>
+                 <span className="font-semibold">AI Chatbot</span> 
+                 <Image
+                      src="/images/check-icon-green.svg"
+                      alt="Home"
+                      width={10}
+                      height={10}
+                      className="w-4 h-4 ml-auto"
+                      priority
+                    />
                 </li>
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">Interactive Map</span> <span className="ml-auto text-sm text-[#060608]">25 POIs</span>
@@ -199,7 +239,15 @@ export default function Home() {
                    <span className="font-semibold">E-commerce</span> <span className="ml-auto text-sm text-[#060608]">10 Products</span>
                 </li>
                 <li className="flex items-center gap-2">
-                   <span className="font-semibold">Crowdfunding</span> <span className="ml-auto text-red-500 font-bold text-lg">✗</span>
+                   <span className="font-semibold">Crowdfunding</span> 
+                    <Image
+                      src="/images/cross-icon-red.svg"
+                      alt="Home"
+                      width={10}
+                      height={10}
+                      className="w-4 h-4 ml-auto"
+                      priority
+                    />
                 </li>
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">User Access</span> <span className="ml-auto text-sm text-[#060608]">Up to 5 users</span>
@@ -208,7 +256,15 @@ export default function Home() {
                    <span className="font-semibold">Translation</span> <span className="ml-auto text-sm text-[#060608]">Italian + English</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="font-semibold">Newsletter</span> <span className="ml-auto text-red-500 font-bold text-lg">✗</span>
+                  <span className="font-semibold">Newsletter</span> 
+                  <Image
+                    src="/images/cross-icon-red.svg"
+                    alt="Home"
+                    width={10}
+                    height={10}
+                    className="w-4 h-4 ml-auto"
+                    priority
+                  />
                 </li>
                 <li className="flex items-center gap-2">
                    <span className="font-semibold">Pages</span> <span className="ml-auto text-sm text-[#060608]">Up to 10</span>
@@ -263,16 +319,16 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div>
               <div className="flex items-start gap-4 mb-8">
-                <div className="w-20 h-9 rounded-full bg-[#2e3342] flex items-center justify-center text-green-400 font-bold text-lg">
+                <div className="rounded-full  flex items-center justify-center text-green-400 font-bold text-lg">
                   <img
                     src="/images/question-icon.svg"
                     alt="Local"
-                    width={150}
-                    height={50}
+                    width={40}
+                    height={40}
                     className="rounded-xl object-cover"
                   />
                 </div>
-                <div>
+                <div style={{ width: 'calc(100% - 40px)' }}>
                   <div className="font-semibold mb-4 text-white">In in sollicitudin lacus. Praesent ut ex nunc.</div>
                   <div className="text-[#E5E5E5] text-sm">
                     Mauris commodo quam dictum, sit amet venenatis erat molestie nec. Fusce faucibus ornare ut tincidunt. Nunc ullamcorper mauris et amet mi luctus aliquet. Sed non lacinia lectus.
@@ -280,16 +336,16 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-20 h-9 rounded-full bg-[#2e3342] flex items-center justify-center text-green-400 font-bold text-lg">
+                <div className="rounded-full  flex items-center justify-center text-green-400 font-bold text-lg">
                    <img
                     src="/images/question-icon.svg"
                     alt="Local"
-                    width={150}
-                    height={50}
+                    width={40}
+                    height={40}
                     className="rounded-xl object-cover"
                   />
                 </div>
-                <div>
+                <div style={{ width: 'calc(100% - 40px)' }}>
                   <div className="font-semibold mb-4 text-white">Nulla id commodo massa.</div>
                   <div className="text-[#E5E5E5] text-sm">
                     Vestibulum nec est et ipsum eleifend molestie nec ut mi. Nunc diam odio, varius in fermentum a, suscipit in turpis. Nam vel risus quis dui lacinia placerat. Etiam sodales ipsum id tristique molestie.
@@ -299,16 +355,16 @@ export default function Home() {
             </div>
             <div>
               <div className="flex items-start gap-4 mb-8">
-                <div className="w-20 h-9 rounded-full bg-[#2e3342] flex items-center justify-center text-green-400 font-bold text-lg">
+                <div className="rounded-full  flex items-center justify-center text-green-400 font-bold text-lg">
                    <img
                     src="/images/question-icon.svg"
                     alt="Local"
-                    width={150}
-                    height={50}
+                    width={40}
+                    height={40}
                     className="rounded-xl object-cover"
                   />
                 </div>
-                <div>
+                <div style={{ width: 'calc(100% - 40px)' }}>
                   <div className="font-semibold mb-4 text-white">Nulla nec tortor suscipit dolor tempus feugiat in vitae nisi.</div>
                   <div className="text-[#E5E5E5] text-sm">
                     Praesent mollis purus non imperdiet blandit. Proin ipsum ligula, efficitur non sagittis et, dapibus eu felis. Nam sed felis non est auctor hendrerit et in ante. Nam cursus diam et.
@@ -316,16 +372,16 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-20 h-9  rounded-full bg-[#2e3342] flex items-center justify-center text-green-400 font-bold text-lg">
+                <div className="rounded-full  flex items-center justify-center text-green-400 font-bold text-lg">
                    <img
                     src="/images/question-icon.svg"
                     alt="Local"
-                    width={150}
-                    height={50}
+                    width={40}
+                    height={40}
                     className="rounded-xl object-cover"
                   />
                 </div>
-                <div>
+                <div style={{ width: 'calc(100% - 40px)' }}>
                   <div className="font-semibold mb-4 text-white">Fusce tempus sem et lorem sollicitudin.</div>
                   <div className="text-[#E5E5E5] text-sm">
                     Aliquam risus arcu, faucibus accumsan congue vitae, pharetra ut ipsum. Phasellus varius facilisis velit sed dignissim. Fusce convallis nec leo vitae convallis. Aliquam tellus ipsum, sollicitudin eu faucibus eget, placerat et felis.
@@ -335,7 +391,7 @@ export default function Home() {
             </div>
           </div>
           {/* Footer */}
-          <div className="text-center text-[#fff] text-sm mt-10 pt-8 border-t border-[#FFFFFF]">
+          <div className="text-center text-[#fff] text-sm mt-10 pt-8 border-t border-[#E5E5E5]">
             Haven’t got your answer? <a href="#" className="text-white font-medium underline">Contact our support now</a>
           </div>
         </div>
