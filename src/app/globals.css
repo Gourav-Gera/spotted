@@ -42,6 +42,7 @@
   --gray: #525252;
   --primary: #4A5D52;
   --black: #060608;
+  --shadow-sm:0px 4px 16px rgba(0, 0, 0, 0.08);
   /* primary font variable for easy reference in components/layouts */
   --font-gilroy: 'Gilroy', Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
@@ -119,7 +120,9 @@ body {
 .input-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); width:20px; height:20px; opacity:0.9; }
 
 .btn-full { width:100%; display:inline-block; padding:12px 18px; border-radius:9999px; background:var(--primary); color:#fff; border:none; font-weight:600; box-shadow:0 6px 18px rgba(74,93,82,0.12); }
-
+.slick-slide > div {
+  height: 100%;
+}
 
 @media (max-width:640px){
   .auth-title { font-size:26px; }

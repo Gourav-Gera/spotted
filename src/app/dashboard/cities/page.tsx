@@ -1,53 +1,256 @@
-import Link from 'next/link';
+"use client";
+import React, { useMemo, useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { FiTrash2 } from "react-icons/fi";
 
-// Static sample data for server-rendered list
-const rows = new Array(8).fill(0).map((_, i) => ({
+// sample rows to mirror the other table pages
+const rows = Array.from({ length: 10 }).map((_, i) => ({
   id: i + 1,
   name: `City ${i + 1}`,
+  code: `C${i + 1}`,
   accommodations: 5 + (i % 6),
   attractions: 1 + (i % 4),
-  events: i % 3,
+  avatar: "/images/hotel-img-table.png",
 }));
 
 export default function CitiesPage() {
-  return (
-    <div className="min-h-screen bg-[#FAFBFB] p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Cities</h1>
+  const [q, setQ] = useState("");
 
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-sm text-[var(--gray)]">Showing {rows.length} cities</div>
-            <Link href="/dashboard/cities/new" className="btn-primary-pill">Add new city</Link>
+  // table overflow / scrolling helpers (same pattern used in bookings)
+  const tableRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollButtons = () => {
+    const el = tableRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  };
+
+  const scrollByDir = (dir: number) => {
+    const el = tableRef.current;
+    if (!el) return;
+    const amount = Math.min(el.clientWidth * 0.7, 600);
+    const target = Math.max(0, Math.min(el.scrollWidth - el.clientWidth, el.scrollLeft + dir * amount));
+    el.scrollTo({ left: target, behavior: "smooth" });
+    setTimeout(updateScrollButtons, 300);
+  };
+
+  useEffect(() => {
+    updateScrollButtons();
+    const onResize = () => updateScrollButtons();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const filtered = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return rows;
+    return rows.filter((r) => [r.name, r.code].some((v) => v.toLowerCase().includes(term)));
+  }, [q]);
+
+  // avatar error state (same pattern as bookings)
+  const [avatarError, setAvatarError] = useState<Record<number, boolean>>({});
+  // dropdown state for filter buttons
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const filtersRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (!filtersRef.current) return;
+      if (!filtersRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, []);
+
+  return (
+    <div className="min-h-screen p-0">
+      <div className="">
+        {/* Header: title left, search+add right, filters row below right */}
+        <div className="mb-6 grid grid-cols-12 gap-6 items-start">
+          <div className="col-span-12">
+            <h2 className="font-semibold text-3xl text-primary">Cities</h2>
+           
           </div>
 
-          <div className="overflow-hidden rounded-md">
-            <table className="w-full text-left">
-              <thead className="bg-[#FAFBFB]">
-                <tr>
-                  <th className="p-4">#</th>
-                  <th className="p-4">City</th>
-                  <th className="p-4">Accommodations</th>
-                  <th className="p-4">Attractions</th>
-                  <th className="p-4">Events</th>
-                  <th className="p-4">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r) => (
-                  <tr key={r.id} className="border-b">
-                    <td className="p-4">{String(r.id).padStart(2, '0')}</td>
-                    <td className="p-4">{r.name}</td>
-                    <td className="p-4">{r.accommodations}</td>
-                    <td className="p-4">{r.attractions}</td>
-                    <td className="p-4">{r.events}</td>
-                    <td className="p-4 text-right">
-                      <Link href={`/dashboard/cities/${encodeURIComponent(r.name)}`} className="text-[var(--gray)]">View</Link>
-                    </td>
+          <div className="col-span-12 flex flex-col items-end">
+            <div className="flex items-center gap-4 w-full">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 bg-white rounded-full px-4 py-3 border border-[#E5E5E5] ">
+                  <svg width="18" height="18" viewBox="0 0 24 24" className="text-[#525252]">
+                    <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="11" cy="11" r="6" stroke="currentColor" strokeWidth="2" fill="none" />
+                  </svg>
+                  <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by city name..." className="w-full text-sm bg-transparent placeholder:text-[#525252] outline-none" />
+                </div>
+              </div>
+
+              <Link href="/dashboard/cities/new" className="inline-flex items-center px-6 py-3 rounded-full border border-[#4A5D52] text-primary font-medium ">  <FiTrash2 className="w-4 h-4 mr-2" /> Add New City</Link>
+            </div>
+
+            <div ref={filtersRef} className="mt-6 flex gap-3 justify-start w-full">
+              <div className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'location' ? null : 'location'); }}
+                  className="flex items-center gap-3 px-6 py-3 cursor-pointer rounded-full bg-[#445B50] text-white text-sm"
+                >
+                  <Image src="/images/location-icon.svg" alt="location icon" width={14} height={14} className="w-3.5 h-3.5" />
+                  <span>Location</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" className="ml-2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" />
+                  </svg>
+                </button>
+
+                {openDropdown === 'location' && (
+                  <div className="absolute left-0 mt-2 w-44 bg-white rounded-md shadow-sm z-50">
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">All Locations</button>
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">City 1</button>
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">City 2</button>
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'accommodation' ? null : 'accommodation'); }}
+                  className="flex items-center gap-3 px-6 py-3 cursor-pointer rounded-full bg-[#445B50] text-white text-sm"
+                >
+                  <Image src="/images/accomodation-icon.svg" alt="accommodation icon" width={14} height={14} className="w-3.5 h-3.5" />
+                  <span>Number of Accommodation</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" className="ml-2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" />
+                  </svg>
+                </button>
+
+                {openDropdown === 'accommodation' && (
+                  <div className="absolute left-0 mt-2 w-52 bg-white rounded-md shadow-sm z-50">
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">All</button>
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">0 - 5</button>
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">6 - 10</button>
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'attraction' ? null : 'attraction'); }}
+                  className="flex items-center gap-3 px-6 py-3 cursor-pointer rounded-full bg-[#445B50] text-white text-sm"
+                >
+                  <Image src="/images/attraction-icon.svg" alt="attraction icon" width={14} height={14} className="w-3.5 h-3.5" />
+                  <span>Number of Attraction</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" className="ml-2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" />
+                  </svg>
+                </button>
+
+                {openDropdown === 'attraction' && (
+                  <div className="absolute left-0 mt-2 w-52 bg-white rounded-md shadow-sm z-50">
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">All</button>
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">0 - 2</button>
+                    <button onClick={() => setOpenDropdown(null)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">3+</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="card-surface p-0 mb-6 overflow-hidden rounded-2xl">
+          <div className="relative">
+            <div ref={tableRef as any} className="overflow-x-auto booking-table-wrap" onScroll={() => updateScrollButtons()}>
+              <table className="min-w-full text-sm booking-table table-fixed">
+                <thead>
+                  <tr className="text-left bg-[#F6F6F6] text-[var(--gray)]">
+                    <th className="w-12 py-4 pl-6 first:rounded-tl-2xl">#</th>
+                    <th className="w-64 py-4">City Name</th>
+                    <th className="w-40 py-4 text-center">Listed Accommodation</th>
+                    <th className="w-40 py-4 text-center">Listed Attraction</th>
+                    <th className="w-24 py-4 last:rounded-tr-2xl text-right">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filtered.map((r, idx) => (
+                    <tr key={r.id} className="align-middle border-t border-[#E9E9E9]">
+                      <td className="py-6 text-sm text-[#6a6f6d]">{String(r.id).padStart(2, '0')}</td>
+
+                      <td className="py-6">
+                        <div className="flex items-center gap-4">
+                          <Image src={r.avatar} alt={r.name} width={48} height={48} className="w-12 h-12 rounded-md object-cover block" />
+                          <div>
+                            <div className="text-sm font-medium text-[#2f3a35]">{r.name}</div>
+                            <div className="text-xs text-[#9aa09e] mt-1">{r.code}</div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-6 text-center font-medium text-[#2f3a35]">{r.accommodations}</td>
+                      <td className="py-6 text-center font-medium text-[#2f3a35]">{r.attractions}</td>
+                      <td className="py-6 text-right">
+                        <Link href={`/dashboard/cities/${encodeURIComponent(r.name)}`} className="text-sm text-[#6a6f6d] hover:text-[#445B50]">View</Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* slide controls for wide text / overflow on large screens */}
+            {(canScrollLeft || canScrollRight) && (
+              <>
+                <button
+                  onClick={() => scrollByDir(-1)}
+                  aria-label="Scroll left"
+                  className="hidden md:inline-flex absolute left-2 top-1/2 -translate-y-1/2 items-center justify-center w-9 h-9 rounded-full bg-white shadow-sm"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+                </button>
+                <button
+                  onClick={() => scrollByDir(1)}
+                  aria-label="Scroll right"
+                  className="hidden md:inline-flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center w-9 h-9 rounded-full bg-white shadow-sm"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile: stacked cards */}
+          <div className="md:hidden space-y-4 p-4">
+            {filtered.map((r) => (
+              <div key={r.id} className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <Image src={r.avatar} alt={r.name} width={56} height={56} className="w-14 h-14 rounded-md object-cover" />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-[var(--gray)]">{r.name}</div>
+                        <div className="font-semibold">{r.name}</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-sm font-semibold">{r.accommodations}</div>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-md bg-[#F1F3F4] flex items-center justify-center text-sm font-semibold text-[var(--primary)]">{r.code}</div>
+                        <div className="font-semibold">{r.name}</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Link href={`/dashboard/cities/${r.id}`} className="text-[var(--primary)]">
+                          <Image src="/images/eye-icon.svg" alt="eye icon" width={20} height={20} className="w-5 h-5" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

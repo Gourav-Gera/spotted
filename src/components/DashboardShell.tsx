@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import DashboardFooter from "./DashboardFooter";
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  
 
   // initialize responsive state and keep in sync with resizes
   useEffect(() => {
@@ -47,15 +49,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           }}
         />
 
-        <main className="flex-1 relative p-4 md:p-8 pb-24">{children}
-          {/* Minimal footer rendered inside the right content area so it doesn't sit under the sidebar */}
-          <div className="hidden md:block">
-            <div className="relative">
-              {/* footer is absolutely positioned inside this relative container */}
-              {/* import dynamically to avoid circular imports at top-level */}
-            </div>
-          </div>
+        <main className="flex-1 relative p-4 md:p-8 pb-24">
+          {children}
         </main>
+
+  {/* dashboard-only compact footer (separate from the site Footer) */}
+  <DashboardFooter />
       </div>
     </div>
   );

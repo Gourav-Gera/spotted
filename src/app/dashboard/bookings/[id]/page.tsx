@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import MinimalFooter from '../../../../components/MinimalFooter';
 import { useSearchParams, useRouter } from "next/navigation";
 
 type Props = { params: { id: string } };
@@ -69,9 +68,7 @@ export default function BookingDetail({ params }: Props) {
       </div>
     </div>
     
-    <div className="mt-10">
-      <MinimalFooter />
-    </div>
+  {/* MinimalFooter removed from booking detail page to avoid duplicate footer — shown on cancel page instead */}
     </>
   );
 }

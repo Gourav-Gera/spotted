@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import CancelForm from './CancelForm';
-import Footer from '../../../../components/Footer';
 
 export default function CancelBooking(){
   return (
@@ -11,11 +10,7 @@ export default function CancelBooking(){
       <div className="max-w-lg">
         <CancelForm />
       </div>
-
-      {/* Ensure footer is consistent with other dashboard pages */}
-      <div className="mt-12">
-        <Footer />
-      </div>
+  {/* DashboardFooter from DashboardShell will render here; removed MinimalFooter to avoid duplication */}
     </div>
   )
 }

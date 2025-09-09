@@ -37,18 +37,19 @@ export default function EarningChart({ mode = 'monthly' }: { mode?: Mode }){
 
   const options: ApexOptions = {
     chart: { toolbar:{show:false}, zoom:{enabled:false}, animations: { enabled: true } },
-  stroke: { curve: 'smooth', width: [3,2], dashArray: [0,4] },
-    markers:{ size:0 },
-  grid:{ show:true, borderColor:'#f2f2f2', strokeDashArray: 4 },
+    stroke: { curve: 'smooth', width: [3,2], dashArray: [0,4] },
+    markers:{ size:6, hover: { size:8 } },
+    dataLabels: { enabled: true, formatter: (val:number) => `${val}`, style: { fontSize: '12px' } },
+    grid:{ show:true, borderColor:'#f2f2f2', strokeDashArray: 4 },
     xaxis: { categories: payload.categories, labels:{ style:{ colors:'#666' } } },
     yaxis: { labels:{ formatter: (val:number) => `${val}` } },
-  colors: ['#2ea3ff', '#8CC6A3'],
+    colors: ['#2ea3ff', '#8CC6A3'],
     tooltip: { shared: true, intersect: false },
     fill: {
       type: 'gradient',
-      gradient: { shadeIntensity: 1, inverseColors: false, opacityFrom: 0.6, opacityTo: 0.1, stops: [0, 90, 100] }
+      gradient: { shadeIntensity: 1, inverseColors: false, opacityFrom: 0.6, opacityTo: 0.05, stops: [0, 60, 100] }
     },
-    legend: { show: true, position: 'bottom', horizontalAlign: 'center' }
+  legend: { show: false }
   };
 
   return <Chart options={options} series={payload.series} type="area" height={260} />

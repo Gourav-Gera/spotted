@@ -1,29 +1,148 @@
+"use client";
+
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 
+const SAMPLE_TAGS = ['beach','historic','mountain','family-friendly','romantic','nightlife'];
+
 export default function NewCityPage() {
-  // Static, non-interactive form placeholder to avoid hydration
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
+  const [tagOpen, setTagOpen] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const tagRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // create object URLs for previews
+    const urls = files.map((f) => URL.createObjectURL(f));
+    setPreviews(urls);
+    return () => urls.forEach((u) => URL.revokeObjectURL(u));
+  }, [files]);
+
+  useEffect(() => {
+    function onDoc(e: MouseEvent) {
+      if (tagRef.current && !tagRef.current.contains(e.target as Node)) setTagOpen(false);
+    }
+    document.addEventListener('click', onDoc);
+    return () => document.removeEventListener('click', onDoc);
+  }, []);
+
+  useEffect(() => {
+    // Read slug from URL query to support edit flow: /dashboard/cities/new?slug=City%201
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const s = params.get('slug');
+      if (s) {
+        const decoded = decodeURIComponent(s);
+        setName(decoded);
+        // In a real app, fetch city details here to prefill description, tags, images, etc.
+        setDescription('');
+      }
+    } catch (e) {
+      // ignore on server or malformed URL
+    }
+  }, []);
+
+  function triggerUpload() {
+    fileInputRef.current?.click();
+  }
+
+  function onFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const list = e.target.files;
+    if (!list) return;
+    const arr = Array.from(list).slice(0, 5); // limit to 5
+    setFiles(arr);
+  }
+
+  function toggleTag(tag: string) {
+    setSelectedTags((s) => (s.includes(tag) ? s.filter((t) => t !== tag) : [...s, tag]));
+  }
+
   return (
-    <div className="min-h-screen bg-[#FAFBFB] p-8">
-      <div className="max-w-3xl mx-auto card-surface p-6 rounded-xl">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Add New City</h1>
-          <Link href="/dashboard/cities" className="btn-ghost">Cancel</Link>
+    <div className="min-h-screen p-0 ">
+      <div >
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-semibold text-primary">Cities</h1>
+          <Link href="/dashboard/cities" className="text-sm text-[var(--gray)]">Cancel</Link>
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">City name</label>
-            <div className="w-full border rounded px-3 py-2 text-[var(--gray)]">(static input)</div>
-          </div>
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <div className="space-y-6">
+            <div>
+              {/* <label className="block text-sm font-medium mb-2">City name</label> */}
+              <input value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-white border border-[#E5E7EB] rounded-full px-4 py-3 text-[var(--gray)]" placeholder="Enter city name" />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Short description</label>
-            <div className="w-full border rounded px-3 py-2 text-[var(--gray)]" style={{ minHeight: 96 }}>(static textarea)</div>
-          </div>
+            <div>
+              {/* <label className="block text-sm font-medium mb-2">Short description</label> */}
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-white border border-[#E5E7EB] rounded-lg px-4 py-4 text-[var(--gray)]" style={{ minHeight: 180 }} placeholder="About City.." />
+            </div>
 
-          <div className="flex items-center gap-2">
-            <div className="btn-primary-pill" role="button">Save city (disabled)</div>
-            <Link href="/dashboard/cities" className="btn-ghost">Discard</Link>
+            <div ref={tagRef} className="relative">
+              {/* <label className="block text-sm font-medium mb-2">Add Hashtags</label> */}
+              <div className="w-full bg-white border border-[#E5E7EB] rounded-full px-5 py-4 flex items-center gap-2 cursor-pointer" onClick={() => setTagOpen((v) => !v)}>
+                <div className="flex-1 flex items-center gap-2 flex-wrap">
+                  {selectedTags.length === 0 ? (
+                    <div className="text-[var(--gray)]">Add Hashtags</div>
+                  ) : (
+                    selectedTags.map((t) => (
+                      <div key={t} className="text-xs bg-[#F1F3F4] px-2 py-1 rounded">{t}</div>
+                    ))
+                  )}
+                </div>
+                <div className="text-sm text-[var(--gray)]">▾</div>
+              </div>
+
+              {tagOpen && (
+                <div className="absolute left-0 right-0 mt-2 bg-white border rounded shadow-sm z-20 p-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    {SAMPLE_TAGS.map((t) => (
+                      <button key={t} onClick={() => toggleTag(t)} className={`text-sm px-3 py-2 rounded ${selectedTags.includes(t) ? 'bg-[var(--primary)] text-white' : 'bg-gray-50 text-[var(--gray)]'}`}>
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <div className="rounded-xl border border-[#EDEDED] bg-white p-8 text-center shadow-sm">
+                <div className="text-lg text-[var(--gray)] mb-1 font-semibold">Upload City Images</div>
+                <div className="text-md text-[var(--gray)] mb-6">Add up to 5 images to showcase the city to travelers."</div>
+
+                <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={onFiles} className="hidden" />
+                <div>
+                  <button type="button" onClick={triggerUpload} className="inline-flex items-center gap-2 border-2 border-[#4A5D52] rounded-full px-6 py-2 text-md cursor-pointer text-[var(--primary)]">+ Upload Photo</button>
+                </div>
+
+                {previews.length > 0 && (
+                  <div className="mt-4 flex items-center gap-3 justify-center flex-wrap">
+                    {previews.map((src, i) => (
+                      <img key={i} src={src} alt={`preview-${i}`} className="w-24 h-24 object-cover rounded-md border" />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Optional sections */}
+            <div className="space-y-4">
+              {['Accommodation','Attractions','Events'].map((title)=> (
+                <div key={title} className="flex items-center justify-between bg-white rounded-xl p-4 border border-[#F0F2F1] shadow-sm">
+                  <div className="font-semibold text-primary">{title} <span className="text-sm text-[var(--gray)] ml-2">(Optional)</span></div>
+                  <button className="inline-flex items-center gap-2 border-2 border-[#4A5D52] text-primary font-medium rounded-full px-6 cursor-pointer py-2 text-sm">+ Add New</button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <button className="w-full bg-[var(--primary)] text-white rounded-full py-4 text-lg font-semibold cursor-pointer shadow-sm">Submit</button>
+            </div>
           </div>
         </div>
       </div>
