@@ -20,9 +20,9 @@ export default function EventsPage() {
           </div>
 
           <div className="col-span-12 flex flex-col items-end">
-            <div className="flex items-center gap-4 w-full">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 bg-white rounded-full px-4 py-3 border border-[#EFEFEF] shadow-sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 bg-white rounded-full px-4 py-3 border border-[#EFEFEF] shadow-sm w-full">
                   <svg width="18" height="18" viewBox="0 0 24 24" className="text-[#9aa09e]">
                     <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                     <circle cx="11" cy="11" r="6" stroke="currentColor" strokeWidth="2" fill="none" />
@@ -30,11 +30,10 @@ export default function EventsPage() {
                   <input placeholder="Search by city name..." className="w-full text-sm bg-transparent placeholder:text-[#9aa09e] outline-none" />
                 </div>
               </div>
-
-              <Link href="/dashboard/events/new" className="inline-flex items-center px-6 py-3 rounded-full bg-[#445B50] text-white font-medium shadow-sm ml-4">+ Add New Event</Link>
+              <Link href="/dashboard/events/new" className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#445B50] text-white font-medium shadow-sm sm:ml-4 w-full sm:w-auto">+ Add New Event</Link>
             </div>
 
-            <div className="mt-6 flex gap-3 justify-start w-full">
+            <div className="mt-6 flex gap-3 justify-start w-full flex-wrap">
               <button className="flex items-center gap-2 px-6 py-3 cursor-pointer rounded-full bg-[#445B50] text-white text-sm">Event Date</button>
               <button className="flex items-center gap-2 px-6 py-3 cursor-pointer rounded-full bg-[#445B50] text-white text-sm">Entry Fee</button>
             </div>
@@ -42,7 +41,8 @@ export default function EventsPage() {
         </div>
 
         <div className="card-surface p-0 mb-6 overflow-hidden rounded-2xl">
-          <div className="overflow-x-auto booking-table-wrap">
+          {/* Desktop table */}
+          <div className="overflow-x-auto booking-table-wrap hidden md:block">
             <table className="min-w-full text-sm booking-table table-fixed">
               <thead>
                 <tr className="text-left bg-[#F6F6F6] text-[var(--gray)]">
@@ -78,6 +78,24 @@ export default function EventsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+          {/* Mobile cards */}
+          <div className="md:hidden p-4 space-y-4">
+            {rows.map(r => (
+              <div key={r.id} className="bg-white rounded-xl border border-[#EFEFEF] p-4 flex flex-col gap-3 shadow-sm">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm leading-tight mb-1">{r.name}</div>
+                    <div className="flex text-xs text-gray-500 gap-3 flex-wrap">
+                      <span>{r.date}</span>
+                      <span>{r.time}</span>
+                      <span>{r.fee}</span>
+                    </div>
+                  </div>
+                  <Link href={`/dashboard/events/${r.id}`} className="text-[var(--primary)] text-sm">View</Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

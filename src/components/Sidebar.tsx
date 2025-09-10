@@ -28,6 +28,11 @@ const items = [
   { label: "About Municipality", href: "/dashboard/about", icon: <FiMap /> },
 ];
 
+function isActive(pathname: string, href: string) {
+  if (href === '/dashboard') return pathname === '/dashboard';
+  return pathname === href || pathname.startsWith(href + '/');
+}
+
 export default function Sidebar({ collapsed = false, mobileOpen = false, onClose, isMobile = false }: Props) {
   const pathname = usePathname() || "/dashboard";
 
@@ -52,7 +57,7 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, onClose
           <nav className="flex-1">
             <ul className="space-y-2">
               {items.map((it) => {
-                const active = pathname === it.href || pathname?.startsWith(it.href + "/");
+                const active = isActive(pathname, it.href);
                 return (
                   <li key={it.href}>
                     <Link
@@ -91,7 +96,7 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, onClose
       <nav className="flex-1">
         <ul className="space-y-2">
           {items.map((it) => {
-            const active = pathname === it.href || pathname?.startsWith(it.href + "/");
+            const active = isActive(pathname, it.href);
             // When collapsed we only want the icon to show the active color. When expanded keep
             // the full-row active background for clarity.
     const rowActiveClass = active && !collapsed ? "bg-[var(--primary)] text-white font-semibold" : "hover:bg-gray-100";

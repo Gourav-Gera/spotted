@@ -35,12 +35,12 @@ const Footer = ({ compact = false }: { compact?: boolean }) => (
 
       {/* Bottom small divider and compact row like screenshot */}
       <div className="border-t border-[#E5E5E5] py-4">
-        <div className="flex items-center justify-between text-sm text-gray-400">
-          <div>&copy; {new Date().getFullYear()} Copyright, All Right Reserved</div>
-          <div className="flex gap-4 justify-between">
-            <a href="#" className="hover:underline">Term & Conditions</a>
-            <a href="#" className="hover:underline">Privacy Policy</a>
-            <a href="#" className="hover:underline">About Us</a>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 justify-between text-sm text-gray-400">
+          <div className="order-2 sm:order-1">&copy; {new Date().getFullYear()} Copyright, All Right Reserved</div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 order-1 sm:order-2">
+            <a href="#" className="hover:underline whitespace-nowrap">Term & Conditions</a>
+            <a href="#" className="hover:underline whitespace-nowrap">Privacy Policy</a>
+            <a href="#" className="hover:underline whitespace-nowrap">About Us</a>
           </div>
         </div>
       </div>

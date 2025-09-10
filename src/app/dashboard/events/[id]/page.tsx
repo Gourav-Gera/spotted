@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BiEdit } from "react-icons/bi";
 import { FiTrash2 } from "react-icons/fi";
-import Slider from "react-slick";
-// Import slick CSS (important)
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// Removed slider; using static image grid
 
 
 // react-slick with no SSR
@@ -23,15 +19,11 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
   const id = params?.id || "1";
   const title = "Florence Jazz Festival";
 
-  const sliderRef = useRef<any>(null);
-
-var settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1
-  };
+  const images = ["/images/why-1.webp","/images/why-2.webp","/images/why-3.webp","/images/why-1.webp"]; // duplicate for demo
+  const perSlide = 3;
+  const slideCount = useMemo(()=> Math.ceil(images.length / perSlide),[images.length]);
+  const [slide,setSlide] = useState(0);
+  function go(i:number){ if(i<0||i>=slideCount) return; setSlide(i); }
 
   return (
     <div className="min-h-screen p-0">
@@ -57,45 +49,28 @@ var settings = {
           </div>
         </div>
 
-        <Slider {...settings}>
-            <div>
-              <Image
-                src="/images/why-1.webp"
-                alt="img1"
-                width={900}
-                height={320}
-                className="object-cover"
-              />
-              </div>
-               <div>
-              <Image
-                src="/images/why-1.webp"
-                alt="img1"
-                width={900}
-                height={320}
-                className="object-cover"
-              />
-              </div>
-               <div>
-              <Image
-                src="/images/why-1.webp"
-                alt="img1"
-                width={900}
-                height={320}
-                className="object-cover"
-              />
-              </div>
-               <div>
-              <Image
-                src="/images/why-1.webp"
-                alt="img1"
-                width={900}
-                height={320}
-                className="object-cover"
-              />
-              </div>
-        
-        </Slider>
+        <div className="mb-6">
+          <div className="relative overflow-hidden rounded-xl">
+            <div className="flex transition-transform duration-500 ease-out" style={{width:`${slideCount*100}%`, transform:`translateX(-${slide*100}%)`}}>
+              {Array.from({length:slideCount}).map((_,s)=>(
+                <div key={s} className="w-full grid grid-cols-3 gap-4">
+                  {images.slice(s*perSlide,s*perSlide+perSlide).map((src,i)=>(
+                    <div key={i} className="overflow-hidden rounded-lg h-48">
+                      <Image src={src} alt={`img-${s}-${i}`} width={600} height={320} className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <button onClick={()=>go(slide-1)} disabled={slide===0} aria-label="Previous images" className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur px-3 py-2 rounded-full text-sm text-primary disabled:opacity-30">‹</button>
+            <button onClick={()=>go(slide+1)} disabled={slide===slideCount-1} aria-label="Next images" className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur px-3 py-2 rounded-full text-sm text-primary disabled:opacity-30">›</button>
+          </div>
+          <div className="flex items-center justify-center gap-2 mt-4">
+            {Array.from({length:slideCount}).map((_,i)=>(
+              <button key={i} onClick={()=>go(i)} className={`w-2 h-2 rounded-full transition-colors ${i===slide? 'bg-[#445B50]' : 'bg-[#C9D2CE]'}`} aria-label={`Go to slide ${i+1}`}></button>
+            ))}
+          </div>
+        </div>
 
 
         {/* Bottom Content */}

@@ -1,138 +1,123 @@
 "use client";
 import React, { useState } from "react";
 import EarningChart from '../../../components/EarningChart';
+import Image from 'next/image';
+import { BiSearch } from 'react-icons/bi';
 
-function StatCard({title, value}:{title:string; value:string}){
-  return (
-    <div className="bg-white rounded-lg p-4 shadow-sm flex-1">
-      <div className="text-sm text-[var(--gray)] mb-2">{title}</div>
-      <div className="text-lg font-bold">{value}</div>
-    </div>
-  )
-}
+export default function EarningsPage(){
+  const [mode,setMode] = useState<'monthly'|'weekly'|'today'>('monthly');
+  const [category,setCategory] = useState<'all'|'accommodation'|'ecommerce'>('all');
+  const [showPriceMenu,setShowPriceMenu] = useState(false);
+  const [showDateMenu,setShowDateMenu] = useState(false);
 
-export default function EarningsPage() {
-  const [mode, setMode] = useState<'monthly'|'weekly'|'today'>('monthly');
-  const [category, setCategory] = useState<'all'|'accommodation'|'ecommerce'>('all');
-  const [showPriceMenu, setShowPriceMenu] = useState(false);
-  const [showDateMenu, setShowDateMenu] = useState(false);
-  const rows = new Array(8).fill(0).map((_,i)=>({
-    id: `#${2300+i}`,
+  const rows = Array.from({length:10}).map((_,i)=>({
+    id: `#${23467+i}`,
     product: i%2? 'Product Name':'Hotel Name',
     user: 'User Name',
-    earning: `$${100+i*10}`,
+    earning: '$100',
     date: '3 July 2025'
-  }))
+  }));
 
   return (
-    <div className="min-h-screen bg-[#FAFBFB] p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Earnings</h1>
-
-        <div className="grid grid-cols-3 gap-6 mb-6">
-          <div className="col-span-2 bg-white rounded-lg p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="font-semibold">Earning</div>
-              <div className="space-x-2">
+    <div className="min-h-screen p-0">
+      <div className="">
+        <h1 className="text-lg font-semibold mb-6">Earnings</h1>
+        {/* Top cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+          <div className="lg:col-span-2 bg-white rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <div className="font-semibold text-sm">Earning</div>
+              <div className="flex items-center gap-2">
                 {(['monthly','weekly','today'] as const).map(m=> (
-                  <button key={m} onClick={()=>setMode(m)} className={`px-3 py-1 rounded-full text-sm ${mode===m? 'bg-[var(--primary)] text-white':'border'}`}>{m.charAt(0).toUpperCase()+m.slice(1)}</button>
+                  <button key={m} onClick={()=>setMode(m)} className={`px-3 py-1 rounded-full text-xs md:text-sm ${mode===m? 'bg-[var(--primary)] text-white':'bg-gray-100 text-gray-600'}`}>{m.charAt(0).toUpperCase()+m.slice(1)}</button>
                 ))}
               </div>
             </div>
             <EarningChart mode={mode} />
           </div>
-
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="font-semibold mb-3">Earning</div>
-            <div className="bg-[var(--primary)] text-white p-4 rounded-lg mb-4 text-center">$200<br/><span className="text-sm">Total Earning</span></div>
-            <div className="grid grid-cols-2 gap-3">
-              <StatCard title="Accommodation" value="$120" />
-              <StatCard title="E-commerce" value="$80" />
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs row (full width, single column) */}
-        <div className="mb-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white rounded-full p-2 shadow-sm flex justify-center">
-              <div className="w-3/4 flex justify-between">
-                {(['all','accommodation','ecommerce'] as const).map(c=> (
-                  <button key={c} onClick={()=>setCategory(c)} className={`px-6 py-2 rounded-full text-sm ${category===c? 'bg-[var(--primary)] text-white':'border'}`}>
-                    {c==='all'? 'All': c==='accommodation'? 'Accommodation':'E-commerce'}
-                  </button>
-                ))}
+          <div className="bg-white rounded-lg p-4 shadow-sm flex flex-col">
+            <div className="font-semibold text-sm mb-3">Earning</div>
+            <div className="rounded-lg bg-[var(--primary)] text-white text-center py-6 text-lg font-semibold mb-4">$200<div className="text-xs font-normal mt-1">Total Earning</div></div>
+            <div className="grid grid-cols-2 gap-3 text-center flex-1">
+              <div className="rounded-md border border-[#E5E5E5] flex flex-col items-center justify-center py-3">
+                <div className="text-xs text-gray-500 mb-1">Accommodation</div>
+                <div className="font-semibold">$120</div>
+              </div>
+              <div className="rounded-md border border-[#E5E5E5] flex flex-col items-center justify-center py-3">
+                <div className="text-xs text-gray-500 mb-1">E-commerce</div>
+                <div className="font-semibold">$80</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Search row */}
-        <div className="mb-3">
-          <div className="max-w-6xl mx-auto">
-            <input placeholder="Search here..." className="w-full border rounded-full px-4 py-3 bg-white" />
+        {/* Category Tabs */}
+        <div className="bg-white rounded-full p-1 shadow-sm flex items-center justify-between max-w-xl mb-4">
+          {(['all','accommodation','ecommerce'] as const).map(c=> (
+            <button key={c} onClick={()=>setCategory(c)} className={`flex-1 px-4 py-2 text-xs md:text-sm rounded-full ${category===c? 'bg-[var(--primary)] text-white':'text-gray-600'}`}>{c==='all'? 'All': c==='accommodation'? 'Accommodation':'E-commerce'}</button>
+          ))}
+        </div>
+
+        {/* Search */}
+        <div className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-[#E5E5E5] mb-4 max-w-xl">
+          <BiSearch className="text-gray-400" />
+          <input placeholder="Search here..." className="w-full text-sm bg-transparent outline-none" />
+        </div>
+
+        {/* Filter pills */}
+        <div className="flex gap-3 mb-6">
+          <div className="relative">
+            <button onClick={()=>{ setShowPriceMenu(v=>!v); setShowDateMenu(false); }} className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)] text-white text-xs md:text-sm">Price Range <span className="text-xs">▾</span></button>
+            {showPriceMenu && (
+              <div className="absolute left-0 mt-2 bg-white border rounded-md shadow-lg w-48 z-20 text-sm">
+                {['$0 - $50','$50 - $200','$200+'].map(opt=> <div key={opt} className="px-4 py-2 hover:bg-gray-50 cursor-pointer" onClick={()=> setShowPriceMenu(false)}>{opt}</div>)}
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <button onClick={()=>{ setShowDateMenu(v=>!v); setShowPriceMenu(false); }} className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)] text-white text-xs md:text-sm">By Date <span className="text-xs">▾</span></button>
+            {showDateMenu && (
+              <div className="absolute left-0 mt-2 bg-white border rounded-md shadow-lg w-48 z-20 text-sm">
+                {['Last 7 days','Last 30 days','This year'].map(opt=> <div key={opt} className="px-4 py-2 hover:bg-gray-50 cursor-pointer" onClick={()=> setShowDateMenu(false)}>{opt}</div>)}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Dropdown row */}
-        <div className="mb-6">
-          <div className="max-w-6xl mx-auto flex gap-3">
-            <div className="relative">
-              <button onClick={()=>{ setShowPriceMenu(v=>!v); setShowDateMenu(false); }} className="px-4 py-2 rounded-full bg-white border text-sm flex items-center gap-2">Price Range <span className="text-xs">▾</span></button>
-              {showPriceMenu ? (
-                <div className="absolute left-0 mt-2 bg-white border rounded-md shadow-lg w-48 z-20">
-                  <div className="p-2 text-sm">$0 - $50</div>
-                  <div className="p-2 text-sm">$50 - $200</div>
-                  <div className="p-2 text-sm">$200+</div>
-                </div>
-              ) : null}
-            </div>
-
-            <div className="relative">
-              <button onClick={()=>{ setShowDateMenu(v=>!v); setShowPriceMenu(false); }} className="px-4 py-2 rounded-full bg-white border text-sm flex items-center gap-2">By Date <span className="text-xs">▾</span></button>
-              {showDateMenu ? (
-                <div className="absolute left-0 mt-2 bg-white border rounded-md shadow-lg w-48 z-20">
-                  <div className="p-2 text-sm">Last 7 days</div>
-                  <div className="p-2 text-sm">Last 30 days</div>
-                  <div className="p-2 text-sm">This year</div>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-
+        {/* Table */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="bg-[#FAFBFB]">
+          <table className="min-w-full text-sm">
+            <thead className="bg-[#FAFBFB] text-gray-600">
               <tr>
-                <th className="p-4">#</th>
-                <th className="p-4">Transaction id</th>
-                <th className="p-4">Product Name/Accommodation</th>
-                <th className="p-4">User Name</th>
-                <th className="p-4">Earning</th>
-                <th className="p-4">Date</th>
-                <th className="p-4">Action</th>
+                <th className="p-4 text-left">#</th>
+                <th className="p-4 text-left">Transaction Id</th>
+                <th className="p-4 text-left">Product Name/Accommodation</th>
+                <th className="p-4 text-left">User Name</th>
+                <th className="p-4 text-left">Earning</th>
+                <th className="p-4 text-left">Date</th>
+                <th className="p-4 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((r,idx)=> (
-                <tr key={r.id} className={idx%2? '':'bg-white'}>
-                  <td className="p-4">{idx+1}</td>
-                  <td className="p-4">{r.id}</td>
-                  <td className="p-4 flex items-center gap-3"> 
-                    <div className="w-10 h-8 bg-gray-100 rounded-md" />
-                    <div>{r.product}</div>
+              {rows.map((r,i)=>(
+                <tr key={r.id} className="border-t border-gray-100">
+                  <td className="p-4 align-middle">{String(i+1).padStart(2,'0')}</td>
+                  <td className="p-4 align-middle">{r.id}</td>
+                  <td className="p-4 align-middle">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-8 bg-gray-100 rounded-md" />
+                      <span>{r.product}</span>
+                    </div>
                   </td>
-                  <td className="p-4">{r.user}</td>
-                  <td className="p-4">{r.earning}</td>
-                  <td className="p-4">{r.date}</td>
-                  <td className="p-4">...</td>
+                  <td className="p-4 align-middle">{r.user}</td>
+                  <td className="p-4 align-middle">{r.earning}</td>
+                  <td className="p-4 align-middle">{r.date}</td>
+                  <td className="p-4 align-middle">…</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
   );
