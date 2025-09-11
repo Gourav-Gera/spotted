@@ -42,7 +42,7 @@ export default function OrdersPage() {
       <div className="mx-auto">
         <h2 className="font-bold text-xl mb-4 text-primary">Orders</h2>
         <div className="card-surface p-0">
-          <div className="flex items-center justify-between gap-4 mb-6 rounded-full border border-[#E5E5E5] overflow-hidden">
+          <div className="flex items-center justify-between gap-4 mb-6 rounded-full border border-[#E5E5E5] overflow-hidden w-full">
             {[
               { key:'new', label:'New' },
               { key:'dispatched', label:'Dispatched' },

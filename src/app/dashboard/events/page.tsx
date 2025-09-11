@@ -64,14 +64,12 @@ export default function EventsPage() {
                     <td className="py-6">{r.fee}</td>
                     <td className="py-6 text-right">
                       <div className="inline-flex items-center justify-end gap-3">
-                        <Link href={`/dashboard/events/${r.id}`} className="text-[var(--primary)]">View</Link>
-                        <button aria-label="More" className="inline-flex items-center justify-center p-2 rounded-full hover:bg-gray-100">
-                          <svg width="4" height="16" viewBox="0 0 4 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="2" cy="2" r="2" fill="#6a6f6d" />
-                            <circle cx="2" cy="8" r="2" fill="#6a6f6d" />
-                            <circle cx="2" cy="14" r="2" fill="#6a6f6d" />
-                          </svg>
-                        </button>
+                        <Link href={`/dashboard/events/${r.id}`} className="text-[var(--primary)]">
+                          <Image src="/images/eye-icon.svg" alt="view" width={16} height={16} className="w-4 h-4" />
+                        </Link>
+                        <Link href={`/dashboard/events/${r.id}/edit`} className="text-sm">
+                          <Image src="/images/edit-icon.svg" alt="edit" width={16} height={16} className="w-4 h-4" />
+                        </Link>
                       </div>
                     </td>
                   </tr>
@@ -92,7 +90,14 @@ export default function EventsPage() {
                       <span>{r.fee}</span>
                     </div>
                   </div>
-                  <Link href={`/dashboard/events/${r.id}`} className="text-[var(--primary)] text-sm">View</Link>
+                  <div className="flex items-center gap-3">
+                    <Link href={`/dashboard/events/${r.id}`} className="text-[var(--primary)]">
+                      <Image src="/images/eye-icon.svg" alt="view" width={20} height={20} className="w-5 h-5" />
+                    </Link>
+                    <Link href={`/dashboard/events/${r.id}/edit`} className="text-sm">
+                      <Image src="/images/edit-icon.svg" alt="edit" width={20} height={20} className="w-5 h-5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

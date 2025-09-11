@@ -19,11 +19,21 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const pageCount = useMemo(()=> Math.ceil(reviews.length / itemsPerPage),[reviews.length]);
   const [page, setPage] = useState(0);
   function go(p:number){ if(p<0||p>=pageCount) return; setPage(p); }
-  // image gallery slider (3 per view)
-  const imgsPerSlide = 3;
-  const imgSlideCount = useMemo(()=> Math.ceil(productImages.length / imgsPerSlide), [productImages.length]);
+  // image gallery slider (2 per view to match design patterns)
+  const imgsPerSlide = 2;
+  const imgSlides = useMemo(()=>{
+    const groups:string[][]=[];
+    for(let i=0;i<productImages.length;i+=imgsPerSlide){
+      const chunk = productImages.slice(i,i+imgsPerSlide);
+      if(chunk.length<imgsPerSlide){
+        chunk.push(...productImages.slice(0, imgsPerSlide - chunk.length));
+      }
+      groups.push(chunk);
+    }
+    return groups;
+  },[productImages]);
   const [imgSlide, setImgSlide] = useState(0);
-  function goImgSlide(i:number){ if(i<0||i>=imgSlideCount) return; setImgSlide(i); }
+  function goImgSlide(i:number){ const len=imgSlides.length; setImgSlide(((i%len)+len)%len); }
 
   return (
     <div className="min-h-screen p-0">
@@ -36,23 +46,23 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       </div>
       <div className="bg-white rounded-2xl p-8 shadow-sm space-y-10">
         {/* Image Gallery Slider (3 visible per slide) */}
-        <div className="relative overflow-hidden rounded-2xl">
-          <div className="flex transition-transform duration-500 ease-out" style={{width:`${imgSlideCount * 100}%`, transform:`translateX(-${imgSlide * 100}%)`}}>
-            {Array.from({length: imgSlideCount}).map((_,slide) => (
-              <div key={slide} className="w-full shrink-0 grid grid-cols-3 gap-4 px-0">
-                {productImages.slice(slide*imgsPerSlide, slide*imgsPerSlide + imgsPerSlide).map((src,i)=>(
-                  <div key={i} className="h-72 rounded-xl overflow-hidden">
+        <div className="group relative overflow-hidden rounded-2xl">
+          <div className="flex transition-transform duration-500 ease-out" style={{width:`${imgSlides.length*100}%`, transform:`translateX(-${(imgSlide*100)/imgSlides.length}%)`}}>
+            {imgSlides.map((group,slide) => (
+              <div key={slide} className="flex-none flex gap-4 px-0" style={{width:`${100/imgSlides.length}%`}}>
+                {group.map((src,i)=>(
+                  <div key={i} className="h-72 rounded-xl overflow-hidden flex-1">
                     <Image src={src} alt={`image-${slide}-${i}`} width={600} height={500} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
             ))}
           </div>
-          <button onClick={()=>goImgSlide(imgSlide-1)} disabled={imgSlide===0} aria-label="Previous images" className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur px-3 py-2 rounded-full text-sm text-primary disabled:opacity-30">‹</button>
-          <button onClick={()=>goImgSlide(imgSlide+1)} disabled={imgSlide===imgSlideCount-1} aria-label="Next images" className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur px-3 py-2 rounded-full text-sm text-primary disabled:opacity-30">›</button>
+          <button onClick={()=>goImgSlide(imgSlide-1)} aria-label="Previous images" className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 border border-[#E5E7EB] px-3 py-2 rounded-full text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">‹</button>
+          <button onClick={()=>goImgSlide(imgSlide+1)} aria-label="Next images" className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 border border-[#E5E7EB] px-3 py-2 rounded-full text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">›</button>
         </div>
         <div className="flex items-center justify-center gap-2 pt-4">
-          {Array.from({length: imgSlideCount}).map((_,i)=>(
+          {imgSlides.map((_,i)=>(
             <button key={i} onClick={()=>goImgSlide(i)} className={`w-2 h-2 rounded-full transition-colors ${i===imgSlide? 'bg-[#445B50]' : 'bg-[#C9D2CE]'}`} aria-label={`Go to image slide ${i+1}`}></button>
           ))}
         </div>
@@ -92,9 +102,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               style={{ transform: `translateX(-${page * 100}%)`, width: `${pageCount * 100}%` }}
             >
               {Array.from({length: pageCount}).map((_, pg) => (
-                <div key={pg} className="w-full grid md:grid-cols-3 gap-6 px-0 shrink-0 grow-0">
+                <div key={pg} className="w-full grid grid-cols-[repeat(3,minmax(0,1fr))] gap-6 px-0 shrink-0 grow-0 min-w-0">
                   {reviews.slice(pg*itemsPerPage, pg*itemsPerPage + itemsPerPage).map(r => (
-                    <div key={r.id} className="bg-white border border-[#E9E9E9] rounded-2xl p-6 flex flex-col justify-between shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+                    <div key={r.id} className="bg-white border border-[#E9E9E9] rounded-2xl p-6 flex flex-col justify-between shadow-[0_1px_2px_rgba(0,0,0,0.04)] min-w-0">
                       <div className="space-y-3">
                         <div className="flex gap-1 text-[#F5B70A]">
                           {Array.from({length:r.rating}).map((_,i)=>(<svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>))}

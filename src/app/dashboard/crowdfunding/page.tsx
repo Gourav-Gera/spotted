@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type CampaignStatus = 'Ongoing' | 'Completed' | 'Cancelled';
 
@@ -35,13 +36,13 @@ export default function CrowdfundingPage() {
       <div>
         <div className="mb-6">
           <h2 className="font-semibold text-3xl text-primary mb-6">Crowdfundings</h2>
-          {/* Tabs */}
-          <div className="flex items-center gap-0 bg-[#445B50]/10 rounded-full w-full max-w-xl overflow-hidden">
+          {/* Tabs ( segmented full-width like Orders/Earnings ) */}
+          <div className="flex items-center justify-between gap-4 rounded-full border border-[#E5E5E5] overflow-hidden w-full mb-4">
             {tabs.map(t => (
               <button
                 key={t.key}
                 onClick={()=>setActive(t.key)}
-                className={`flex-1 px-8 py-3 text-sm font-medium rounded-full transition ${active===t.key ? 'bg-[#445B50] text-white' : 'text-[var(--gray)] hover:text-primary'}`}
+                className={`pill-tab w-[25%] ${active===t.key ? 'bg-[var(--primary)] text-white' : 'bg-[#F6F7F9] text-[var(--gray)]'}`}
               >{t.label}</button>
             ))}
           </div>
@@ -88,14 +89,12 @@ export default function CrowdfundingPage() {
                     <td className="py-6">{r.createdOn}</td>
                     <td className="py-6 text-right">
                       <div className="inline-flex items-center justify-end gap-3">
-                        <Link href={`/dashboard/crowdfunding/${r.id}`} className="text-[var(--primary)]">View</Link>
-                        <button aria-label="More" className="inline-flex items-center justify-center p-2 rounded-full hover:bg-gray-100">
-                          <svg width="4" height="16" viewBox="0 0 4 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="2" cy="2" r="2" fill="#6a6f6d" />
-                            <circle cx="2" cy="8" r="2" fill="#6a6f6d" />
-                            <circle cx="2" cy="14" r="2" fill="#6a6f6d" />
-                          </svg>
-                        </button>
+                        <Link href={`/dashboard/crowdfunding/${r.id}`} className="text-[var(--primary)]">
+                          <Image src="/images/eye-icon.svg" alt="view" width={16} height={16} className="w-4 h-4" />
+                        </Link>
+                        <Link href={`/dashboard/crowdfunding/${r.id}/edit`} className="text-sm">
+                          <Image src="/images/edit-icon.svg" alt="edit" width={16} height={16} className="w-4 h-4" />
+                        </Link>
                       </div>
                     </td>
                   </tr>

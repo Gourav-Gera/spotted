@@ -1,21 +1,11 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import MultiImageUploader from '@/components/MultiImageUploader';
 
-export default function NewCampaignPage(){
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
-
-  useEffect(()=>{
-    const urls = files.map(f=>URL.createObjectURL(f));
-    setPreviews(urls);
-    return () => urls.forEach(u=>URL.revokeObjectURL(u));
-  },[files]);
-
-  function triggerUpload(){ fileInputRef.current?.click(); }
-  function onFiles(e: React.ChangeEvent<HTMLInputElement>){ const l=e.target.files; if(!l) return; setFiles(Array.from(l).slice(0,5)); }
+export default function NewCampaignPage(){ 
+  const [images, setImages] = useState<File[]>([]);
 
   return (
     <div className="min-h-screen p-0">
@@ -69,13 +59,7 @@ export default function NewCampaignPage(){
         <div className="rounded-xl border border-[#EDEDED] bg-white p-10 text-center shadow-sm">
           <div className="text-sm text-[var(--gray)] mb-1 font-semibold">Upload Images</div>
           <div className="text-xs text-[var(--gray)] mb-6">Add up to 5 images to visually support your campaign</div>
-          <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={onFiles} className="hidden" />
-          <button type="button" onClick={triggerUpload} className="inline-flex items-center gap-2 border border-[#4A5D52] rounded-full px-6 py-2 text-xs cursor-pointer text-[var(--primary)]">+ Upload Photo</button>
-          {previews.length>0 && (
-            <div className="mt-4 flex items-center gap-3 justify-center flex-wrap">
-              {previews.map((src,i)=> <img key={i} src={src} alt={`prev-${i}`} className="w-24 h-24 object-cover rounded-md border" />)}
-            </div>
-          )}
+          <MultiImageUploader max={5} onChange={setImages} className="inline-block" />
         </div>
         <label className="flex items-start gap-2 text-[10px] leading-relaxed text-[var(--gray)]">
           <input type="checkbox" className="mt-1" defaultChecked />

@@ -23,7 +23,7 @@ export default function EarningsPage(){
       <div className="">
         <h1 className="text-lg font-semibold mb-6">Earnings</h1>
         {/* Top cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           <div className="lg:col-span-2 bg-white rounded-lg p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <div className="font-semibold text-sm">Earning</div>
@@ -51,21 +51,27 @@ export default function EarningsPage(){
           </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="bg-white rounded-full p-1 shadow-sm flex items-center justify-between max-w-xl mb-4">
+        {/* Category Tabs (match Orders segmented style) */}
+  <div className="flex items-center justify-between gap-4 mb-4 rounded-full border border-[#E5E5E5] overflow-hidden w-full">
           {(['all','accommodation','ecommerce'] as const).map(c=> (
-            <button key={c} onClick={()=>setCategory(c)} className={`flex-1 px-4 py-2 text-xs md:text-sm rounded-full ${category===c? 'bg-[var(--primary)] text-white':'text-gray-600'}`}>{c==='all'? 'All': c==='accommodation'? 'Accommodation':'E-commerce'}</button>
+            <button
+              key={c}
+              onClick={()=>setCategory(c)}
+              className={`pill-tab w-[33.33%] ${category===c? 'bg-[var(--primary)] text-white' : 'bg-[#F6F7F9] text-[var(--gray)]'}`}
+            >
+              {c==='all'? 'All': c==='accommodation'? 'Accommodation':'E-commerce'}
+            </button>
           ))}
         </div>
 
         {/* Search */}
-        <div className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-[#E5E5E5] mb-4 max-w-xl">
+  <div className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-[#E5E5E5] mb-4 w-full max-w-none">
           <BiSearch className="text-gray-400" />
           <input placeholder="Search here..." className="w-full text-sm bg-transparent outline-none" />
         </div>
 
         {/* Filter pills */}
-        <div className="flex gap-3 mb-6">
+  <div className="flex gap-3 mb-6 flex-wrap">
           <div className="relative">
             <button onClick={()=>{ setShowPriceMenu(v=>!v); setShowDateMenu(false); }} className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)] text-white text-xs md:text-sm">Price Range <span className="text-xs">▾</span></button>
             {showPriceMenu && (
@@ -85,8 +91,8 @@ export default function EarningsPage(){
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full text-sm">
+        <div className="bg-white rounded-lg shadow-sm overflow-x-auto">
+          <table className="min-w-full text-sm md:table">
             <thead className="bg-[#FAFBFB] text-gray-600">
               <tr>
                 <th className="p-4 text-left">#</th>
@@ -112,7 +118,16 @@ export default function EarningsPage(){
                   <td className="p-4 align-middle">{r.user}</td>
                   <td className="p-4 align-middle">{r.earning}</td>
                   <td className="p-4 align-middle">{r.date}</td>
-                  <td className="p-4 align-middle">…</td>
+                  <td className="p-4 align-middle">
+                    <div className="flex items-center gap-3">
+                      <a href="#" className="text-[var(--primary)]">
+                        <Image src="/images/eye-icon.svg" alt="view" width={16} height={16} className="w-4 h-4" />
+                      </a>
+                      <a href="#" className="text-sm">
+                        <Image src="/images/edit-icon.svg" alt="edit" width={16} height={16} className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

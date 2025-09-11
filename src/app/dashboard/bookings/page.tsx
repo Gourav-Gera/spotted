@@ -65,7 +65,7 @@ export default function BookingsPage() {
       <div className="mx-auto">
         <h2 className="font-bold text-xl mb-4 text-primary">Bookings</h2>
         <div className="card-surface p-0">
-          <div className="flex items-center justify-between  gap-4 mb-6 rounded-full border border-[#E5E5E5]">
+          <div className="flex items-center justify-between  gap-4 mb-6 rounded-full border border-[#E5E5E5] w-full">
           {[
             { key: "upcoming", label: "Upcoming" },
             { key: "ongoing", label: "Ongoing" },

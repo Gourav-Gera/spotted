@@ -49,9 +49,9 @@ export default function DashboardPage() {
 						<div className="flex items-center justify-between mb-3">
 							<div className="font-bold text-xl">Order Summary</div>
 							<div className="flex gap-2">
-								<button className={`px-3 py-1 rounded-full text-[var(--primary)] font-semibold text-xs border ${orderMode==='monthly' ? 'bg-[#F6F7F9] border-[var(--primary)]' : 'bg-white text-gray-500 border-gray-200'}`} onClick={()=>setOrderMode('monthly')}>Monthly</button>
-									<button className={`px-3 py-1 rounded-full text-[var(--primary)] font-semibold text-xs border ${orderMode==='weekly' ? 'bg-[#F6F7F9] border-[var(--primary)]' : 'bg-white text-gray-500 border-gray-200'}`} onClick={()=>setOrderMode('weekly')}>Weekly</button>
-									<button className={`px-3 py-1 rounded-full text-[var(--primary)] font-semibold text-xs border ${orderMode==='today' ? 'bg-[#F6F7F9] border-[var(--primary)]' : 'bg-white text-gray-500 border-gray-200'}`} onClick={()=>setOrderMode('today')}>Today</button>
+								<button className={`px-3 py-1 rounded-full font-semibold text-xs ${orderMode==='monthly' ? 'bg-[var(--primary)] text-white' : 'bg-gray-100 text-gray-600'}`} onClick={()=>setOrderMode('monthly')}>Monthly</button>
+								<button className={`px-3 py-1 rounded-full font-semibold text-xs ${orderMode==='weekly' ? 'bg-[var(--primary)] text-white' : 'bg-gray-100 text-gray-600'}`} onClick={()=>setOrderMode('weekly')}>Weekly</button>
+								<button className={`px-3 py-1 rounded-full font-semibold text-xs ${orderMode==='today' ? 'bg-[var(--primary)] text-white' : 'bg-gray-100 text-gray-600'}`} onClick={()=>setOrderMode('today')}>Today</button>
 							</div>
 						</div>
 						<div className="flex items-center gap-4 justify-between bg-[#E6F4EA] rounded-2xl p-2">
@@ -91,9 +91,9 @@ export default function DashboardPage() {
 					<div className="flex items-center justify-between">
 						<div className="font-bold text-lg">Earning</div>
 						<div className="flex gap-2">
-							<button className={`px-3 py-1 rounded-full text-[var(--primary)] font-semibold text-xs border ${chartMode==='monthly' ? 'bg-[#F6F7F9] border-[var(--primary)]' : 'bg-white text-gray-500 border-gray-200'}`} onClick={()=>setChartMode('monthly')}>Monthly</button>
-							<button className={`px-3 py-1 rounded-full text-[var(--primary)] font-semibold text-xs border ${chartMode==='weekly' ? 'bg-[#F6F7F9] border-[var(--primary)]' : 'bg-white text-gray-500 border-gray-200'}`} onClick={()=>setChartMode('weekly')}>Weekly</button>
-							<button className={`px-3 py-1 rounded-full text-[var(--primary)] font-semibold text-xs border ${chartMode==='today' ? 'bg-[#F6F7F9] border-[var(--primary)]' : 'bg-white text-gray-500 border-gray-200'}`} onClick={()=>setChartMode('today')}>Today</button>
+							<button className={`px-3 py-1 rounded-full font-semibold text-xs ${chartMode==='monthly' ? 'bg-[var(--primary)] text-white' : 'bg-gray-100 text-gray-600'}`} onClick={()=>setChartMode('monthly')}>Monthly</button>
+							<button className={`px-3 py-1 rounded-full font-semibold text-xs ${chartMode==='weekly' ? 'bg-[var(--primary)] text-white' : 'bg-gray-100 text-gray-600'}`} onClick={()=>setChartMode('weekly')}>Weekly</button>
+							<button className={`px-3 py-1 rounded-full font-semibold text-xs ${chartMode==='today' ? 'bg-[var(--primary)] text-white' : 'bg-gray-100 text-gray-600'}`} onClick={()=>setChartMode('today')}>Today</button>
 						</div>
 					</div>
 					<div>
@@ -131,6 +131,9 @@ export default function DashboardPage() {
 							<td className="py-2 px-2 font-semibold">$100</td>
 							<td className="py-2 px-2">3 July 2025</td>
 							<td className="py-2 px-2 flex items-center justify-end gap-2">
+								<Link href="#" className="text-[var(--primary)]">
+									<Image src="/images/eye-icon.svg" alt="eye icon" width={16} height={16} className="w-4 h-4 block" />
+								</Link>
 								<Link href="#" className="text-sm">
 									<Image src="/images/edit-icon.svg" alt="edit icon" width={16} height={16} className="w-4 h-4 block" />
 								</Link>

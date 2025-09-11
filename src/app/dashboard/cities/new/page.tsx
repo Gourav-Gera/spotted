@@ -2,13 +2,12 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import MultiImageUploader from '@/components/MultiImageUploader';
 
 const SAMPLE_TAGS = ['beach','historic','mountain','family-friendly','romantic','nightlife'];
 
 export default function NewCityPage() {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -16,12 +15,7 @@ export default function NewCityPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const tagRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    // create object URLs for previews
-    const urls = files.map((f) => URL.createObjectURL(f));
-    setPreviews(urls);
-    return () => urls.forEach((u) => URL.revokeObjectURL(u));
-  }, [files]);
+  // previews handled internally by MultiImageUploader
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -47,16 +41,7 @@ export default function NewCityPage() {
     }
   }, []);
 
-  function triggerUpload() {
-    fileInputRef.current?.click();
-  }
-
-  function onFiles(e: React.ChangeEvent<HTMLInputElement>) {
-    const list = e.target.files;
-    if (!list) return;
-    const arr = Array.from(list).slice(0, 5); // limit to 5
-    setFiles(arr);
-  }
+  // uploads handled by MultiImageUploader
 
   function toggleTag(tag: string) {
     setSelectedTags((s) => (s.includes(tag) ? s.filter((t) => t !== tag) : [...s, tag]));
@@ -113,20 +98,8 @@ export default function NewCityPage() {
             <div>
               <div className="rounded-xl border border-[#EDEDED] bg-white p-8 text-center shadow-sm">
                 <div className="text-lg text-[var(--gray)] mb-1 font-semibold">Upload City Images</div>
-                <div className="text-md text-[var(--gray)] mb-6">Add up to 5 images to showcase the city to travelers."</div>
-
-                <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={onFiles} className="hidden" />
-                <div>
-                  <button type="button" onClick={triggerUpload} className="inline-flex items-center gap-2 border-2 border-[#4A5D52] rounded-full px-6 py-2 text-md cursor-pointer text-[var(--primary)]">+ Upload Photo</button>
-                </div>
-
-                {previews.length > 0 && (
-                  <div className="mt-4 flex items-center gap-3 justify-center flex-wrap">
-                    {previews.map((src, i) => (
-                      <img key={i} src={src} alt={`preview-${i}`} className="w-24 h-24 object-cover rounded-md border" />
-                    ))}
-                  </div>
-                )}
+                <div className="text-md text-[var(--gray)] mb-6">Add up to 5 images to showcase the city to travelers.</div>
+                <MultiImageUploader max={5} onChange={setImages} className="inline-block" />
               </div>
             </div>
 

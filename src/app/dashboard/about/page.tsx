@@ -1,8 +1,33 @@
-import React from 'react';
+"use client";
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function AboutPage() {
+export default function AboutPage(){
+  const images = ['/images/rome-city-image-1.png','/images/rome-city-image-2.png','/images/rome-city-image-3.png','/images/rome-city-image-1.png','/images/rome-city-image-2.png'];
+  const perSlide = 2; // show 2 per row like design screenshot
+  const slideCount = useMemo(()=> Math.ceil(images.length / perSlide),[images.length]);
+  const slides = useMemo(()=> {
+    const groups: string[][] = [];
+    for(let i=0;i<images.length;i+=perSlide){
+      const chunk = images.slice(i, i+perSlide);
+      if(chunk.length < perSlide){
+        // wrap to beginning so the last slide is filled
+        chunk.push(...images.slice(0, perSlide - chunk.length));
+      }
+      groups.push(chunk);
+    }
+    return groups;
+  },[images]);
+  const [slide,setSlide] = useState(0);
+  function go(i:number){
+    const len = slides.length;
+    const wrapped = ((i % len) + len) % len; // safe modulo
+    setSlide(wrapped);
+  }
+  const next = () => go(slide+1);
+  const prev = () => go(slide-1);
+
   return (
     <div className="min-h-screen p-0">
       <div className="">
@@ -14,13 +39,28 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="overflow-hidden rounded-lg">
-              <Image src="/images/rome-city-image-1.png" alt="img-1" width={800} height={400} className="w-full h-56 object-cover" />
+  <div className="card-surface rounded-xl p-6">
+          {/* Image slider */}
+          <div className="mb-6">
+    <div className="group relative overflow-hidden rounded-2xl">
+        <div className="flex transition-transform duration-500 ease-out" style={{width:`${slides.length*100}%`, transform:`translateX(-${(slide*100)/slides.length}%)`}}>
+                {slides.map((group,s)=>(
+          <div key={s} className="flex-none flex gap-4" style={{width:`${100/slides.length}%`}}>
+                    {group.map((src,i)=>(
+                    <div key={i} className="overflow-hidden rounded-2xl h-64 md:h-72 flex-1">
+                        <Image src={src} alt={`about-img-${s}-${i}`} width={800} height={400} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+  <button onClick={prev} aria-label="Previous images" className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 border border-[#E5E7EB] px-3 py-2 rounded-full text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">‹</button>
+  <button onClick={next} aria-label="Next images" className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 border border-[#E5E7EB] px-3 py-2 rounded-full text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">›</button>
             </div>
-            <div className="overflow-hidden rounded-lg">
-              <Image src="/images/rome-city-image-2.png" alt="img-2" width={800} height={400} className="w-full h-56 object-cover" />
+            <div className="flex items-center justify-center gap-2 mt-4">
+              {slides.map((_,i)=>(
+                <button key={i} onClick={()=>go(i)} className={`w-2 h-2 rounded-full transition-colors ${i===slide? 'bg-[#445B50]' : 'bg-[#C9D2CE]'}`} aria-label={`Go to slide ${i+1}`}></button>
+              ))}
             </div>
           </div>
 
@@ -34,5 +74,5 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

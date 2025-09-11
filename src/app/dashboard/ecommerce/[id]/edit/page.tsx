@@ -1,15 +1,10 @@
 "use client";
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import MultiImageUploader from '@/components/MultiImageUploader';
 
 export default function EditProductPage({ params }: { params: { id: string } }){
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
-
-  useEffect(()=>{ const urls = files.map(f=>URL.createObjectURL(f)); setPreviews(urls); return ()=> urls.forEach(u=>URL.revokeObjectURL(u)); },[files]);
-  function triggerUpload(){ fileInputRef.current?.click(); }
-  function onFiles(e: React.ChangeEvent<HTMLInputElement>){ const l=e.target.files; if(!l) return; setFiles(Array.from(l).slice(0,5)); }
+  const [images, setImages] = useState<File[]>([]);
 
   return (
     <div className="min-h-screen p-0">
@@ -43,13 +38,7 @@ export default function EditProductPage({ params }: { params: { id: string } }){
           <div className="rounded-xl border border-[#EDEDED] bg-white p-6 shadow-sm">
             <div className="text-[var(--gray)] mb-2 font-semibold">Upload Images</div>
             <div className="text-xs text-[var(--gray)] mb-4">Add up to 5 product images</div>
-            <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={onFiles} className="hidden" />
-            <button type="button" onClick={triggerUpload} className="inline-flex items-center gap-2 border-2 border-[#4A5D52] rounded-full px-6 py-2 text-sm cursor-pointer text-[var(--primary)]">+ Upload Photo</button>
-            {previews.length>0 && (
-              <div className="mt-4 flex items-center gap-3 flex-wrap">
-                {previews.map((src,i)=> <img key={i} src={src} alt={`prev-${i}`} className="w-20 h-24 object-cover rounded-md border" />)}
-              </div>
-            )}
+            <MultiImageUploader max={5} onChange={setImages} />
           </div>
           <button className="w-full bg-[var(--primary)] text-white rounded-full py-4 text-sm font-semibold cursor-pointer shadow-sm">Save Changes</button>
         </div>

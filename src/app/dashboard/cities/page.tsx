@@ -79,7 +79,7 @@ export default function CitiesPage() {
           </div>
 
           <div className="col-span-12 flex flex-col items-end">
-            <div className="flex items-center gap-4 w-full">
+            <div className="flex items-center gap-4 w-full flex-wrap">
               <div className="flex-1">
                 <div className="flex items-center gap-3 bg-white rounded-full px-4 py-3 border border-[#E5E5E5] ">
                   <svg width="18" height="18" viewBox="0 0 24 24" className="text-[#525252]">
@@ -90,10 +90,10 @@ export default function CitiesPage() {
                 </div>
               </div>
 
-              <Link href="/dashboard/cities/new" className="inline-flex items-center px-6 py-3 rounded-full border border-[#4A5D52] text-primary font-medium ">  <FiTrash2 className="w-4 h-4 mr-2" /> Add New City</Link>
+              <Link href="/dashboard/cities/new" className="inline-flex items-center px-6 py-3 rounded-full border border-[#4A5D52] text-primary font-medium whitespace-nowrap">  <FiTrash2 className="w-4 h-4 mr-2" /> Add New City</Link>
             </div>
 
-            <div ref={filtersRef} className="mt-6 flex gap-3 justify-start w-full">
+            <div ref={filtersRef} className="mt-6 flex gap-3 justify-start w-full flex-wrap">
               <div className="relative">
                 <button
                   onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'location' ? null : 'location'); }}
@@ -161,7 +161,8 @@ export default function CitiesPage() {
         </div>
 
         <div className="card-surface p-0 mb-6 overflow-hidden rounded-2xl">
-          <div className="relative">
+          {/* Desktop table */}
+          <div className="relative hidden md:block">
             <div ref={tableRef as any} className="overflow-x-auto booking-table-wrap" onScroll={() => updateScrollButtons()}>
               <table className="min-w-full text-sm booking-table table-fixed">
                 <thead>
@@ -191,7 +192,14 @@ export default function CitiesPage() {
                       <td className="py-6 text-center font-medium text-[#2f3a35]">{r.accommodations}</td>
                       <td className="py-6 text-center font-medium text-[#2f3a35]">{r.attractions}</td>
                       <td className="py-6 text-right">
-                        <Link href={`/dashboard/cities/${encodeURIComponent(r.name)}`} className="text-sm text-[#6a6f6d] hover:text-[#445B50]">View</Link>
+                        <div className="inline-flex items-center justify-end gap-3">
+                          <Link href={`/dashboard/cities/${encodeURIComponent(r.name)}`} className="text-[var(--primary)]">
+                            <Image src="/images/eye-icon.svg" alt="view" width={16} height={16} className="w-4 h-4" />
+                          </Link>
+                          <Link href={`/dashboard/cities/new?slug=${encodeURIComponent(r.name)}`} className="text-sm">
+                            <Image src="/images/edit-icon.svg" alt="edit" width={16} height={16} className="w-4 h-4" />
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}
